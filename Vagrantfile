@@ -12,7 +12,7 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
-  config.vm.box = "geerlingguy/debian9"
+  # config.vm.box = "geerlingguy/debian9"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -33,11 +33,12 @@ Vagrant.configure("2") do |config|
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
   # config.vm.network "private_network", ip: "192.168.33.10"
-    config.vm.network "private_network", type: "dhcp"
+  # config.vm.network "private_network", type: "dhcp"
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
   # your network.
+  # config.vm.network "public_network"
   # config.vm.network "public_network"
 
   # Share an additional folder to the guest VM. The first argument is
@@ -68,4 +69,26 @@ Vagrant.configure("2") do |config|
   #   apt-get update
   #   apt-get install -y apache2
   # SHELL
-end
+
+  config.vm.define "controle" do |controle|
+    controle.vm.box = "geerlingguy/debian9"
+    controle.vm.network "private_network", ip: "172.17.177.100"
+    controle.vm.hostname = "controle"
+    controle.vm.provider "virtualbox" do |vb|
+      vb.name = "controle"
+      vb.memory = "2048"
+      vb.cpus = "2"
+#      vb.gui = "true"
+  end
+
+#   config.vm.provision "shell" do |s|
+    controle.vm.provision "shell", path: "update.sh"
+    controle.vm.synced_folder ".", "/vagrant", disabled: true
+    controle.vm.synced_folder "./configs", "/var/configs", owner: "root", group: "root" 
+
+
+  end
+
+  end
+
+#  end
